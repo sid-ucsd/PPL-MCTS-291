@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from transformers import GPT2LMHeadModel, GPT2TokenizerFast, RepetitionPenaltyLogitsProcessor, BertTokenizer, BertModel
+from transformers import GPT2LMHeadModel, GPT2TokenizerFast, RepetitionPenaltyLogitsProcessor, BertModel, BertTokenizer
 
 import argparse
 import logging
@@ -53,14 +53,6 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "--rollout_size",
-    default=5,
-    type=int,
-    required=False,
-    help="Number of tokens to generate during rollout"
-)
-
-parser.add_argument(
     "--batch_size",
     default=5,
     type=int,
@@ -68,37 +60,44 @@ parser.add_argument(
     help="Number of prompts used for generation at once"
 )
 
+
 parser.add_argument("--seed", type=int, default=42, help="random seed for initialization")
 
 args = parser.parse_args()
 args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 args.n_gpu = torch.cuda.device_count()
 
-logging.basicConfig(
-    format="%(message)s",
-    level=logging.WARNING,
-    filename=("../log/amazon_polarity/mcts_{}_{}_{}_{}_{}_testgit.log".format(args.c, args.temperature, args.penalty, args.num_it, args.rollout_size))
-)
-logger = logging.getLogger(__name__)
+# logging.basicConfig(
+#     format="%(message)s",
+#     level=logging.WARNING,
+#     filename=("../log/CLS/mcts_{}_{}_{}_{}_testgit.log".format(args.c, args.temperature, args.penalty, args.num_it)) 
+# )
+# logger = logging.getLogger(__name__)
 
 
+tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
 #-------------- Model definition ---------------#
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
+        self.bert = BertModel.from_pretrained('bert-base-cased', output_hidden_states=True)
         self.fc_txt1 = nn.Linear(768, 512)
         self.fc_txt2 = nn.Linear(512, 256)
-        self.fc_classif = nn.Linear(256, 2)
+        self.fc_classif = nn.Linear(256, 6)
 
 
-
-    def forward(self, text):
+    def forward(self, texts):
+        tokenizer_res = tokenizer.batch_encode_plus(texts, truncation=True, max_length=512, padding='longest')
+        tokens_tensor = torch.cuda.LongTensor(tokenizer_res['input_ids']) 
+        attention_tensor = torch.cuda.LongTensor(tokenizer_res['attention_mask'])
+        output = self.bert(tokens_tensor, attention_mask=attention_tensor)
+        text = F.normalize(torch.div(torch.sum(output[2][-1], axis=1),torch.unsqueeze(torch.sum(attention_tensor, axis=1),1)))
         text = F.relu(self.fc_txt1(text))
         text = F.relu(self.fc_txt2(text))
         text = self.fc_classif(text)
         return nn.Softmax(dim = 1)(text)
-        
-model_path = "../datasets/amazon_polarity/full/models/validation_tokenfixed_BEST2021_06_16-17_35_02.pth"
+
+model_path = "./my_data/models/validation_BEST_bert_tuned_oracle2024_11_14-22_09_11.pth"
 # Create an instance of our network
 net = Net()
 # Load weights
@@ -108,20 +107,11 @@ net.cuda()
 net.eval()
 net = nn.DataParallel(net)
 
-print("loading bert")
-bert_tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
-bert = BertModel.from_pretrained('bert-base-cased', output_hidden_states=True)
-bert.cuda()
-bert.eval()
-bert = nn.DataParallel(bert)
-print("bert loaded")
-
-
 print("loading GPT model")
-gpt = GPT2LMHeadModel.from_pretrained("../../gpt2-amazon-notag-bigtraining-end")
+gpt = GPT2LMHeadModel.from_pretrained("gpt2")
 gpt.eval()
 gpt.to("cuda")
-tokenizer_gpt = GPT2TokenizerFast.from_pretrained("../../gpt2-amazon-notag-bigtraining-end")
+tokenizer_gpt = GPT2TokenizerFast.from_pretrained("gpt2")
 tokenizer_gpt.padding_side = "left"
 tokenizer_gpt.pad_token = tokenizer_gpt.eos_token 
 eos_token_id = gpt.config.eos_token_id
@@ -148,17 +138,7 @@ def get_values(tokens_ids, labels):
     with torch.no_grad():
         outputs = net(propositions)
     return outputs[labels]
-def get_values(tokens_ids, labels):
-    """Gets sequence scores from the discriminator"""
-    propositions = tokenizer_gpt.batch_decode(tokens_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
-    tokenizer_res = bert_tokenizer.batch_encode_plus(propositions, truncation=True, padding=True, max_length=512)
-    tokens_tensor = torch.cuda.LongTensor(tokenizer_res['input_ids'])
-    attention_tensor = torch.cuda.LongTensor(tokenizer_res['attention_mask'])
-    with torch.no_grad():
-        output = bert(tokens_tensor, attention_mask=attention_tensor)
-        embeddings_tensor = F.normalize(torch.div(torch.sum(output[2][-1], axis=1),torch.unsqueeze(torch.sum(attention_tensor, axis=1),1)))
-        outputs = net(embeddings_tensor)
-    return outputs[labels]
+
 
 def pad_sequences_to_left(sequences, batch_first=False, padding_value=0):
     """Add left padding so sequences have same shape"""
@@ -201,7 +181,7 @@ def pad_sequences_to_left_states(sequences, padding_value=0, max_len=0):
     return out_tensor
 
 
-def root_fun(original_input, prompt_masks, labels, temperature, repetition_penalty):
+def root_fun(original_input, labels, temperature, repetition_penalty):
     """Initialize roots scores"""
     # Forward pass of GPT-2 to get priors and states
     model_inputs = gpt.prepare_inputs_for_generation(original_input.input_ids, attention_mask=original_input.attention_mask, use_cache=True)
@@ -215,7 +195,8 @@ def root_fun(original_input, prompt_masks, labels, temperature, repetition_penal
         states = outputs.past_key_values
 
         prompt_masked_input_ids = torch.clone(model_inputs["input_ids"])
-        prompt_masked_input_ids[prompt_masks]=14827
+        inverted_attention_mask = model_inputs["attention_mask"] == 0
+        prompt_masked_input_ids[inverted_attention_mask]=14827
         priors = repetition_penalty(prompt_masked_input_ids, outputs.logits[:, -1, :] / temperature)
         priors = F.softmax(priors, dim=-1).cpu().numpy()
         
@@ -226,10 +207,13 @@ def root_fun(original_input, prompt_masks, labels, temperature, repetition_penal
     return priors, values, states
 
 
-def rec_fun(states, token_ids, attention_masks, prompt_masks, labels, temperature, repetition_penalty, rollout_size):
-    """Get score from current nodes"""
+def rec_fun(states, token_ids, attention_masks, labels, temperature, repetition_penalty):
+    # Vector to store if the element in the batch is finished (eos or ".")
+    # is_finished = torch.unsqueeze(torch.zeros(len(token_ids), device="cuda"), 1)
+    index_ending = torch.unsqueeze(torch.zeros(len(token_ids), device="cuda"), 1)
     # Forward pass of GPT-2 to get priors and states
-    model_inputs = gpt.prepare_inputs_for_generation(token_ids, attention_mask=attention_masks, use_cache=True, past=states)
+    model_inputs = gpt.prepare_inputs_for_generation(token_ids, attention_mask=attention_masks, use_cache=True)
+    # model_inputs = gpt.prepare_inputs_for_generation(token_ids[:,[-1]], attention_mask=attention_masks[:,[-1]], use_cache=True, past=states)
     with torch.no_grad():
         outputs = gpt(
             **model_inputs,
@@ -237,48 +221,50 @@ def rec_fun(states, token_ids, attention_masks, prompt_masks, labels, temperatur
             output_attentions=False,
             output_hidden_states=False,
         )
-
-        next_states = outputs.past_key_values
-        
+        output_states = outputs.past_key_values
         prompt_masked_input_ids = torch.clone(token_ids)
+        #Masking padding to not penalize pad (==eos) token
+        inverted_attention_mask = attention_masks == 0
         #penalizing an unused token
-        prompt_masked_input_ids[prompt_masks]=14827
-        
+        prompt_masked_input_ids[inverted_attention_mask]=14827
         priors = repetition_penalty(prompt_masked_input_ids, outputs.logits[:, -1, :] / temperature)
         priors = F.softmax(priors, dim=-1)
-        if(rollout_size > 0):
-            # next_tokens = torch.multinomial(priors, num_samples=1)
-            next_tokens = torch.unsqueeze(torch.argmax(priors, dim=-1), dim=1)
+        next_tokens = torch.multinomial(priors, num_samples=1)
+        # next_tokens =  torch.unsqueeze(torch.argmax(priors, dim=-1), dim=1)
+        is_finished = torch.sum(prompt_masked_input_ids==eos_token_id, dim=1)>0
+
+        token_ids = torch.cat((token_ids, next_tokens), dim = 1)
+        attention_masks = torch.cat((attention_masks, torch.unsqueeze(torch.ones(len(attention_masks), dtype=torch.long, device="cuda"), 1)), dim = 1)
+        prompt_masked_input_ids = torch.cat((prompt_masked_input_ids, next_tokens), dim=1)
+        model_inputs = gpt.prepare_inputs_for_generation(token_ids, attention_mask=attention_masks, use_cache=True)
+        #Until every rollouts are finished or we reached maximum gpt length
+        while(not is_finished.all() and len(token_ids[0]) < 1024):
+            with torch.no_grad():
+                outputs = gpt(
+                    **model_inputs,
+                    return_dict=True,
+                    output_attentions=False,
+                    output_hidden_states=False,
+                )
+           
+            # next_tokens = torch.multinomial(F.softmax(repetition_penalty(prompt_masked_input_ids, outputs.logits[:, -1, :] / temperature), dim=-1), num_samples=1)
+            next_tokens = torch.unsqueeze(torch.argmax(F.softmax(repetition_penalty(prompt_masked_input_ids, outputs.logits[:, -1, :] / temperature), dim=-1), dim=-1), dim=1)
             token_ids = torch.cat((token_ids, next_tokens), dim = 1)
-            attention_masks = torch.cat((attention_masks, torch.unsqueeze(torch.ones(len(attention_masks), dtype=torch.long, device=args.device), 1)), dim = 1)
-            prompt_masked_input_ids = torch.cat((prompt_masked_input_ids, next_tokens), dim=1)
-            model_inputs = gpt.prepare_inputs_for_generation(token_ids, attention_mask=attention_masks, use_cache=True, past = outputs.past_key_values)
-            for i in range(rollout_size):
-                with torch.no_grad():
-                    outputs = gpt(
-                        **model_inputs,
-                        return_dict=True,
-                        output_attentions=False,
-                        output_hidden_states=False,
-                    )
-                # next_tokens = torch.unsqueeze(torch.argmax(F.softmax(repetition_penalty(prompt_masked_input_ids, outputs.logits[:, -1, :] / temperature), dim=-1), dim=-1), dim=1)
-                next_tokens = torch.multinomial(priors, num_samples=1)
-                token_ids = torch.cat((token_ids, next_tokens), dim = 1)
-                attention_masks = torch.cat((attention_masks, torch.unsqueeze(torch.ones(len(attention_masks), dtype=torch.long, device=args.device), 1)), dim = 1)
-                
-                prompt_masked_input_ids = torch.cat((prompt_masked_input_ids, next_tokens), dim=1)
-                model_inputs = gpt.prepare_inputs_for_generation(token_ids, attention_mask = attention_masks, use_cache=True, past = outputs.past_key_values)
+            attention_masks = torch.cat((attention_masks, torch.unsqueeze(torch.ones(len(attention_masks), dtype=torch.long, device="cuda"), 1)), dim = 1)
             
+            prompt_masked_input_ids = torch.cat((prompt_masked_input_ids, next_tokens), dim=1)
+            is_finished = torch.sum(prompt_masked_input_ids==eos_token_id, dim=1)>0
+            model_inputs = gpt.prepare_inputs_for_generation(token_ids, attention_mask = attention_masks, use_cache=True)
 
     # Use of our discriminator to get values
     values = get_values(token_ids, labels).cpu().numpy()
 
-    return priors.cpu().numpy(), values, next_states
+    return priors.cpu().numpy(), values, output_states
 
 
 
 class BatchedMCTS():
-    def __init__(self, root_fun, rec_fun, batch_size, num_simulations, num_actions, num_sparse_actions, pb_c_init, temperature, alpha, penalty, rollout_size):
+    def __init__(self, root_fun, rec_fun, batch_size, num_simulations, num_actions, num_sparse_actions, pb_c_init, temperature, alpha, penalty):
         # Initialize parameters
         self._batch_size = batch_size
         self._num_simulations = num_simulations
@@ -287,14 +273,12 @@ class BatchedMCTS():
         self._pb_c_init = pb_c_init
         self._temperature = temperature
         self.alpha = alpha
-        self.rollout_size = rollout_size
 
         self._root_fun = root_fun # a function called at the root
         self._rec_fun = rec_fun # a function called in the tree
         self._adaptive_min_values = np.zeros(batch_size, dtype=np.float32)
         self._adaptive_max_values = np.zeros(batch_size, dtype=np.float32)
         self._labels = torch.zeros((batch_size, 2), dtype=torch.bool, device=args.device)
-        self._prompt_lengths = torch.zeros(batch_size, dtype=torch.uint8, device=args.device)
 
         # Allocate all necessary storage.
         # For a given search associated to a batch-index, node i is the i-th node
@@ -314,7 +298,7 @@ class BatchedMCTS():
         # The 0-indexed depth of the node. The root is the only 0-depth node.
         # The depth of node i, is the depth of its parent + 1.
         self._depth = np.zeros(batch_node, dtype=np.int32)
-        self._is_terminal = np.full(batch_node, False, dtype=np.bool)
+        self._is_terminal = np.full(batch_node, False, dtype=np.bool_)
 
         # To avoid costly numpy ops, we store a sparse version of the actions.
         # We select the top k actions according to the policy, and keep a mapping
@@ -354,23 +338,18 @@ class BatchedMCTS():
     def set_labels(self, labels): 
         self._labels = labels
 
-    def set_prompt_lengths(self, lengths): 
-        self._prompt_lengths = lengths    
-
     def search(self, original_input):
         self._reset_tree()
 
-        prompt_masks = torch.arange(len(original_input.input_ids[0]), device="cuda")[None, :] < torch.unsqueeze(torch.sum(original_input.attention_mask ==0, dim=1).add(self._prompt_lengths) - 1, 1)
-
         # Evaluate the root.
-        prior, values, states = self._root_fun(original_input, prompt_masks, self._labels, self._temperature, self._repetition_penalty)
+        prior, values, states = self._root_fun(original_input, self._labels, self._temperature, self._repetition_penalty)
 
        
         self._adaptive_min_values = values
         self._adaptive_max_values = values + 1e-6
 
         root_index = 0
-        self.create_node(root_index, prior, 1, values, states, original_input.input_ids, original_input.attention_mask, np.full(self._batch_size, False, dtype=np.bool))
+        self.create_node(root_index, prior, 1, values, states, original_input.input_ids, original_input.attention_mask, np.full(self._batch_size, False, dtype=np.bool_))
 
        
         
@@ -475,13 +454,12 @@ class BatchedMCTS():
         # Add actions to list of tokens and extend attention mask by 1
         tokens_ids = torch.cat((tokens_ids, torch.unsqueeze(torch.cuda.LongTensor(dense_actions), 1)), dim = 1)
         attention_masks = torch.cat((attention_masks, torch.unsqueeze(torch.ones(len(dense_actions), dtype=torch.long, device=args.device), 1)), dim = 1)
-        prompt_masks = torch.arange(len(tokens_ids[0]), device="cuda")[None, :] < torch.unsqueeze(torch.sum(attention_masks==0, dim=1).add(self._prompt_lengths) - 1, 1)
 
         # Check if expanded nodes are terminal 
         expanded_node_is_terminal = dense_actions == eos_token_id 
 
         # Evaluate nodes.
-        (prior, values, next_states) = self._rec_fun(states, tokens_ids, attention_masks, prompt_masks, self._labels, self._temperature, self._repetition_penalty, self.rollout_size)
+        (prior, values, next_states) = self._rec_fun(states, tokens_ids, attention_masks, self._labels, self._temperature, self._repetition_penalty)
        
         # Create the new nodes.
         self.create_node(next_node_index, prior, likelihoods*children_priors, values, next_states, tokens_ids, attention_masks, expanded_node_is_terminal)
@@ -563,16 +541,18 @@ class BatchedMCTS():
             # Go up
             node_indices = parents
 
+
 def main():
     print("loading dataset")
-    data_lines = pd.read_csv("../datasets/amazon_polarity/full/dataset_test_2.tsv", sep='\t', engine='python', encoding="utf8")
+    data_lines = pd.read_csv("./my_data/test_1.tsv", sep='\t', engine='python', encoding="utf8")
     print("dataset loaded")
-    generated_counter = 750
-    samples_size = 1040
+    generated_counter = 0
+    samples_size = 24
     batch_size = args.batch_size
-    labels = torch.zeros((batch_size, 2), dtype=torch.bool, device=args.device)
+    
+    labels = torch.zeros((batch_size, data_lines["label"].nunique()), dtype=torch.bool, device="cuda")
     prompt_texts = [None] * batch_size
-    MCTS = BatchedMCTS(root_fun, rec_fun, batch_size=batch_size, num_simulations=args.num_it, num_actions=vocab_size+1, num_sparse_actions=50, pb_c_init=args.c, temperature = args.temperature, alpha=args.alpha, penalty=args.penalty, rollout_size = args.rollout_size)
+    MCTS = BatchedMCTS(root_fun, rec_fun, batch_size=batch_size, num_simulations=args.num_it, num_actions=vocab_size+1, num_sparse_actions=50, pb_c_init=args.c, temperature = args.temperature, alpha=args.alpha, penalty=args.penalty)
     samples_pbar = tqdm(total = samples_size, desc="Samples generated")
     while(generated_counter + batch_size <= samples_size): 
         labels.fill_(0)
@@ -581,26 +561,23 @@ def main():
         
         for i, (_, row) in enumerate(lines.iterrows()):
             labels[i, int(row["label"])] = 1
-            prompt_texts[i] = "<|startoftext|> " + str(row["title"]) + " [SEP] "
-
-        original_input = tokenizer_gpt(prompt_texts, return_tensors="pt", padding=True, add_special_tokens=False, max_length=512, truncation=True).to(args.device)
+            prompt_texts[i] = "<|startoftext|> " + str(row["text"])
+          
         MCTS.set_labels(labels)
-        MCTS.set_prompt_lengths(torch.sum(original_input.attention_mask, dim=1))
-        
-        tokens_pbar = tqdm(total = 98, desc="Tokens generated")
-        for i in range(0, 98):
+        original_input = tokenizer_gpt(prompt_texts, return_tensors="pt", padding=True, add_special_tokens=False, max_length=11, truncation=True).to("cuda")
+        # print(tokenizer_gpt.decode(original_input.input_ids[0], skip_special_tokens=False, clean_up_tokenization_spaces=True))
+        tokens_pbar = tqdm(total = 16, desc="Tokens generated") # 23
+        for i in range(0, 16):
             res_search = MCTS.search(original_input)
             original_input.input_ids = torch.cat((original_input.input_ids, torch.unsqueeze(torch.cuda.LongTensor(np.argmax(res_search,axis=1)),1)), dim = 1)
-            original_input.attention_mask = torch.cat((original_input.attention_mask, torch.unsqueeze(torch.ones(batch_size, dtype=torch.long, device=args.device),1)), dim = 1)
+            original_input.attention_mask = torch.cat((original_input.attention_mask, torch.unsqueeze(torch.ones(batch_size, dtype=torch.long, device="cuda"),1)), dim = 1)
             prompt_texts = [tokenizer_gpt.decode(token_ids, skip_special_tokens=False, clean_up_tokenization_spaces=True) for token_ids in original_input.input_ids]
             print(prompt_texts)
-            
             tokens_pbar.update(1)
 
         final_texts = tokenizer_gpt.batch_decode(original_input.input_ids, skip_special_tokens=False, clean_up_tokenization_spaces=True)
         for text in final_texts:
-            split = text.split("[SEP]")
-            logging.warning(split[0].replace("<|endoftext|>", "") + "[SEP]" + split[1].split("<|endoftext|>")[0] + "<|endoftext|>")
+            logging.warning("<|startoftext|> " + ((text.split("\n")[0]).split("<|startoftext|> ")[1]).split("<|endoftext|>")[0] + "<|endoftext|>")
         generated_counter += batch_size
         samples_pbar.update(batch_size)
             
