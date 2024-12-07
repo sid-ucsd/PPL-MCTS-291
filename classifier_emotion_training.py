@@ -63,11 +63,11 @@ parser.add_argument(
 )
 args = parser.parse_args()
 batch_size = 5
-nb_epoch = 75
+nb_epoch = 3
 
-path = "placeholder" + args.dataset
+path = "./my_data/"
 # Prepare the data
-data = pd.read_csv("datasets/emotion/full/train_2.tsv", sep='\t', engine='python', encoding="utf8")
+data = pd.read_csv("./my_data/train_1.tsv", sep='\t', engine='python', encoding="utf8")
 labels_count = np.zeros(data["label"].nunique())
 for index, row in data.iterrows():
     labels_count[int(row["label"])] += 1
@@ -76,12 +76,12 @@ weight = weight / labels_count
 samples_weight = np.array([weight[label] for label in data["label"]])
 sampler = torch.utils.data.WeightedRandomSampler(samples_weight, len(samples_weight))
 print("loading training dataset")
-dataset_train = TextDataset("train_2") # create the dataset
+dataset_train = TextDataset("train_1") # create the dataset
 train_loader = torch.utils.data.DataLoader(dataset_train, batch_size=batch_size, sampler=sampler, num_workers=8)
 print("training dataset loaded")
 
 print("loading validation dataset")
-dataset_validate = TextDataset("validation_2") # create the dataset
+dataset_validate = TextDataset("validation") # create the dataset
 valid_loader = torch.utils.data.DataLoader(dataset_validate, batch_size=batch_size, shuffle=True, num_workers=8)
 print("validation dataset loaded")
 
@@ -90,7 +90,7 @@ net = Net()
 net.cuda()
 # Define the optimization criterion
 criterion = nn.CrossEntropyLoss().cuda()
-optimizer = AdamW(net.parameters(), lr=2e-5, correct_bias=False)
+optimizer = AdamW(net.parameters(), lr=2e-6, correct_bias=False)
 scheduler = get_linear_schedule_with_warmup(
   optimizer,
   num_warmup_steps=0,
@@ -137,7 +137,7 @@ for epoch in range(nb_epoch):
             
     if(100 * correct / total > best):
         best = 100 * correct / total
-        torch.save(net.state_dict(), path + "/models/validation_BEST_bert_tuned_oracle" + timestr + ".pth")
+        torch.save(net.state_dict(), path + "models/validation_BEST_bert_tuned_oracle" + timestr + ".pth")
     print('Epoch %d Accuracy of the network on the %d valid packages : %d %%, best : %d %%' % (epoch, total,
 100 * correct / total, best))
     print(confusion_matrix(res_labels, res_preds))
@@ -145,6 +145,6 @@ for epoch in range(nb_epoch):
         
 
 
-torch.save(net.state_dict(), path + "/models/validation_final_bert_tuned_oracle" + timestr + ".pth")
+torch.save(net.state_dict(), path + "models/validation_final_bert_tuned_oracle" + timestr + ".pth")
 
 
