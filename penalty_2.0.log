@@ -1,0 +1,136 @@
+/home/zeus/miniconda3/envs/cloudspace/lib/python3.10/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Loaded discriminator : validation_final_bert_tuned_oracle2024_11_15-06_54_51.pth
+loading GPT model
+GPT model loaded
+loading dataset
+dataset loaded
+Samples generated:   0%|          | 0/16 [00:00<?, ?it/s]
+Tokens generated:   0%|          | 0/10 [00:00<?, ?it/s][A/teamspace/studios/this_studio/PPL-MCTS/mcts_rollout_emotion.py:91: UserWarning: The torch.cuda.*DtypeTensor constructors are no longer recommended. It's best to use methods such as torch.tensor(data, dtype=*, device='cuda') to create tensors. (Triggered internally at ../torch/csrc/tensor/python_tensor.cpp:83.)
+  tokens_tensor = torch.cuda.LongTensor(tokenizer_res['input_ids'])
+
+Tokens generated:  10%|█         | 1/10 [00:14<02:08, 14.24s/it][A
+Tokens generated:  20%|██        | 2/10 [00:16<00:58,  7.29s/it][A
+Tokens generated:  30%|███       | 3/10 [00:22<00:45,  6.44s/it][A
+Tokens generated:  40%|████      | 4/10 [01:15<02:30, 25.07s/it][A
+Tokens generated:  50%|█████     | 5/10 [01:22<01:32, 18.47s/it][A
+Tokens generated:  60%|██████    | 6/10 [01:24<00:51, 12.79s/it][A
+Tokens generated:  70%|███████   | 7/10 [01:42<00:43, 14.58s/it][A
+Tokens generated:  80%|████████  | 8/10 [01:44<00:21, 10.72s/it][A
+Tokens generated:  90%|█████████ | 9/10 [01:50<00:09,  9.14s/it][A
+Tokens generated: 100%|██████████| 10/10 [01:53<00:00,  7.29s/it][AWARNING:root:<|startoftext|> im feeling rather rotten.<|endoftext|>
+WARNING:root:<|startoftext|> im updating my blog.<|endoftext|>
+WARNING:root:<|startoftext|> i never make her feel bad about it.<|endoftext|>
+WARNING:root:<|startoftext|> i left with my own thoughts.<|endoftext|>
+Samples generated:  25%|██▌       | 4/16 [01:53<05:41, 28.45s/it]['<|startoftext|> im feeling rather rotten.', '<|startoftext|> im updating my blog.', '<|startoftext|> i never make her feel', '<|startoftext|> i left with my own']
+['<|startoftext|> im feeling rather rotten.\n', '<|startoftext|> im updating my blog.\n', '<|startoftext|> i never make her feel bad', '<|startoftext|> i left with my own thoughts']
+['<|startoftext|> im feeling rather rotten.\n[', '<|startoftext|> im updating my blog.\nI', '<|startoftext|> i never make her feel bad about', '<|startoftext|> i left with my own thoughts.']
+['<|startoftext|> im feeling rather rotten.\n[02', "<|startoftext|> im updating my blog.\nI'm", '<|startoftext|> i never make her feel bad about it', '<|startoftext|> i left with my own thoughts.\n']
+['<|startoftext|> im feeling rather rotten.\n[02:', "<|startoftext|> im updating my blog.\nI'm not", '<|startoftext|> i never make her feel bad about it.', '<|startoftext|> i left with my own thoughts.\nI']
+['<|startoftext|> im feeling rather rotten.\n[02:01', "<|startoftext|> im updating my blog.\nI'm not sure", '<|startoftext|> i never make her feel bad about it.\n', "<|startoftext|> i left with my own thoughts.\nI'm"]
+['<|startoftext|> im feeling rather rotten.\n[02:01]', "<|startoftext|> im updating my blog.\nI'm not sure if", '<|startoftext|> i never make her feel bad about it.\n[', "<|startoftext|> i left with my own thoughts.\nI'm not"]
+['<|startoftext|> im feeling rather rotten.\n[02:01] <', "<|startoftext|> im updating my blog.\nI'm not sure if I", '<|startoftext|> i never make her feel bad about it.\n[02', "<|startoftext|> i left with my own thoughts.\nI'm not sure"]
+['<|startoftext|> im feeling rather rotten.\n[02:01] <j', "<|startoftext|> im updating my blog.\nI'm not sure if I should", '<|startoftext|> i never make her feel bad about it.\n[02:', "<|startoftext|> i left with my own thoughts.\nI'm not sure if"]
+['<|startoftext|> im feeling rather rotten.\n[02:01] <jason', "<|startoftext|> im updating my blog.\nI'm not sure if I should say", '<|startoftext|> i never make her feel bad about it.\n[02:01', "<|startoftext|> i left with my own thoughts.\nI'm not sure if I"]
+
+
+Tokens generated:   0%|          | 0/10 [00:00<?, ?it/s][A[ATokens generated: 100%|██████████| 10/10 [01:53<00:00, 11.38s/it]
+
+
+Tokens generated:  10%|█         | 1/10 [00:06<00:58,  6.48s/it][A[A
+
+Tokens generated:  20%|██        | 2/10 [00:08<00:32,  4.12s/it][A[A
+
+Tokens generated:  30%|███       | 3/10 [00:29<01:21, 11.61s/it][A[A
+
+Tokens generated:  40%|████      | 4/10 [00:39<01:05, 10.84s/it][A[A
+
+Tokens generated:  50%|█████     | 5/10 [00:54<01:02, 12.42s/it][A[A
+
+Tokens generated:  60%|██████    | 6/10 [01:03<00:45, 11.26s/it][A[A
+
+Tokens generated:  70%|███████   | 7/10 [02:28<01:46, 35.36s/it][A[A
+
+Tokens generated:  80%|████████  | 8/10 [03:11<01:15, 37.71s/it][A[A
+
+Tokens generated:  90%|█████████ | 9/10 [04:26<00:49, 49.55s/it][A[A
+
+Tokens generated: 100%|██████████| 10/10 [05:09<00:00, 47.61s/it][A[AWARNING:root:<|startoftext|> i was feeling a little bit of an overreaction to this.<|endoftext|>
+WARNING:root:<|startoftext|> i cant walk into a room without my shoes on.<|endoftext|>
+WARNING:root:<|startoftext|> i felt anger when I saw the picture of her.<|endoftext|>
+WARNING:root:<|startoftext|> i explain why i'm not a feminist.<|endoftext|>
+Samples generated:  50%|█████     | 8/16 [07:03<07:38, 57.30s/it]['<|startoftext|> i was feeling a little', '<|startoftext|> i cant walk into a', '<|startoftext|> i felt anger when I', "<|startoftext|> i explain why i'm"]
+['<|startoftext|> i was feeling a little bit', '<|startoftext|> i cant walk into a room', '<|startoftext|> i felt anger when I saw', "<|startoftext|> i explain why i'm not"]
+['<|startoftext|> i was feeling a little bit of', '<|startoftext|> i cant walk into a room without', '<|startoftext|> i felt anger when I saw the', "<|startoftext|> i explain why i'm not a"]
+['<|startoftext|> i was feeling a little bit of an', '<|startoftext|> i cant walk into a room without my', '<|startoftext|> i felt anger when I saw the picture', "<|startoftext|> i explain why i'm not a feminist"]
+['<|startoftext|> i was feeling a little bit of an over', '<|startoftext|> i cant walk into a room without my shoes', '<|startoftext|> i felt anger when I saw the picture of', "<|startoftext|> i explain why i'm not a feminist."]
+['<|startoftext|> i was feeling a little bit of an overre', '<|startoftext|> i cant walk into a room without my shoes on', '<|startoftext|> i felt anger when I saw the picture of her', "<|startoftext|> i explain why i'm not a feminist.\n"]
+['<|startoftext|> i was feeling a little bit of an overreaction', '<|startoftext|> i cant walk into a room without my shoes on.', '<|startoftext|> i felt anger when I saw the picture of her.', "<|startoftext|> i explain why i'm not a feminist.\n["]
+['<|startoftext|> i was feeling a little bit of an overreaction to', '<|startoftext|> i cant walk into a room without my shoes on.\n', '<|startoftext|> i felt anger when I saw the picture of her.\n', "<|startoftext|> i explain why i'm not a feminist.\n[20"]
+['<|startoftext|> i was feeling a little bit of an overreaction to this', '<|startoftext|> i cant walk into a room without my shoes on.\n[', '<|startoftext|> i felt anger when I saw the picture of her.\nI', "<|startoftext|> i explain why i'm not a feminist.\n[20:"]
+['<|startoftext|> i was feeling a little bit of an overreaction to this.', '<|startoftext|> i cant walk into a room without my shoes on.\n[02', '<|startoftext|> i felt anger when I saw the picture of her.\nI was', "<|startoftext|> i explain why i'm not a feminist.\n[20:22"]
+
+Tokens generated:   0%|          | 0/10 [00:00<?, ?it/s][ATokens generated: 100%|██████████| 10/10 [05:09<00:00, 30.99s/it]
+
+Tokens generated:  10%|█         | 1/10 [00:14<02:09, 14.41s/it][A
+Tokens generated:  20%|██        | 2/10 [01:29<06:41, 50.22s/it][A
+Tokens generated:  30%|███       | 3/10 [01:40<03:45, 32.18s/it][A
+Tokens generated:  40%|████      | 4/10 [01:47<02:13, 22.27s/it][A
+Tokens generated:  50%|█████     | 5/10 [01:59<01:32, 18.50s/it][A
+Tokens generated:  60%|██████    | 6/10 [02:16<01:11, 17.95s/it][A
+Tokens generated:  70%|███████   | 7/10 [03:33<01:52, 37.39s/it][A
+Tokens generated:  80%|████████  | 8/10 [04:20<01:21, 40.53s/it][A
+Tokens generated:  90%|█████████ | 9/10 [04:37<00:33, 33.16s/it][A
+Tokens generated: 100%|██████████| 10/10 [06:02<00:00, 49.00s/it][AWARNING:root:<|startoftext|> i like to have a good time.<|endoftext|>
+WARNING:root:<|startoftext|> i jest i n [1]<|endoftext|>
+WARNING:root:<|startoftext|> i don t feel like I'm in a good place.<|endoftext|>
+WARNING:root:<|startoftext|> i feel beautifully emotional about this. I'm not sure if it's<|endoftext|>
+Samples generated:  75%|███████▌  | 12/16 [13:06<04:49, 72.49s/it]['<|startoftext|> i like to have a', '<|startoftext|> i jest i n', '<|startoftext|> i don t feel like', '<|startoftext|> i feel beautifully emotional about']
+['<|startoftext|> i like to have a good', '<|startoftext|> i jest i n [', '<|startoftext|> i don t feel like I', '<|startoftext|> i feel beautifully emotional about this']
+['<|startoftext|> i like to have a good time', '<|startoftext|> i jest i n [1', "<|startoftext|> i don t feel like I'm", '<|startoftext|> i feel beautifully emotional about this.']
+['<|startoftext|> i like to have a good time.', '<|startoftext|> i jest i n [1]', "<|startoftext|> i don t feel like I'm in", '<|startoftext|> i feel beautifully emotional about this. I']
+['<|startoftext|> i like to have a good time.\n', '<|startoftext|> i jest i n [1]\n', "<|startoftext|> i don t feel like I'm in a", "<|startoftext|> i feel beautifully emotional about this. I'm"]
+['<|startoftext|> i like to have a good time.\n[', '<|startoftext|> i jest i n [1]\n[', "<|startoftext|> i don t feel like I'm in a good", "<|startoftext|> i feel beautifully emotional about this. I'm not"]
+['<|startoftext|> i like to have a good time.\n[02', '<|startoftext|> i jest i n [1]\n[2', "<|startoftext|> i don t feel like I'm in a good place", "<|startoftext|> i feel beautifully emotional about this. I'm not sure"]
+['<|startoftext|> i like to have a good time.\n[02:', '<|startoftext|> i jest i n [1]\n[2][', "<|startoftext|> i don t feel like I'm in a good place.", "<|startoftext|> i feel beautifully emotional about this. I'm not sure if"]
+['<|startoftext|> i like to have a good time.\n[02:01', '<|startoftext|> i jest i n [1]\n[2][3', "<|startoftext|> i don t feel like I'm in a good place.\n", "<|startoftext|> i feel beautifully emotional about this. I'm not sure if it"]
+['<|startoftext|> i like to have a good time.\n[02:01]', '<|startoftext|> i jest i n [1]\n[2][3]]', "<|startoftext|> i don t feel like I'm in a good place.\n[", "<|startoftext|> i feel beautifully emotional about this. I'm not sure if it's"]
+
+
+Tokens generated:   0%|          | 0/10 [00:00<?, ?it/s][A[ATokens generated: 100%|██████████| 10/10 [06:02<00:00, 36.23s/it]
+
+
+Tokens generated:  10%|█         | 1/10 [00:16<02:26, 16.30s/it][A[A
+
+Tokens generated:  20%|██        | 2/10 [00:21<01:17,  9.73s/it][A[A
+
+Tokens generated:  30%|███       | 3/10 [00:22<00:39,  5.64s/it][A[A
+
+Tokens generated:  40%|████      | 4/10 [00:28<00:35,  5.92s/it][A[A
+
+Tokens generated:  50%|█████     | 5/10 [00:39<00:38,  7.72s/it][A[A
+
+Tokens generated:  60%|██████    | 6/10 [00:51<00:36,  9.24s/it][A[A
+
+Tokens generated:  70%|███████   | 7/10 [00:59<00:26,  8.79s/it][A[A
+
+Tokens generated:  80%|████████  | 8/10 [01:15<00:22, 11.13s/it][A[A
+
+Tokens generated:  90%|█████████ | 9/10 [01:42<00:16, 16.11s/it][A[A
+
+Tokens generated: 100%|██████████| 10/10 [02:31<00:00, 26.19s/it][A[AWARNING:root:<|startoftext|> i pay attention it's a little bit of an oddity. I<|endoftext|>
+WARNING:root:<|startoftext|> i just feel extremely sad.<|endoftext|>
+WARNING:root:<|startoftext|> i find myself in a situation where I have to make decisions about my<|endoftext|>
+WARNING:root:<|startoftext|> i was feeling as if I had been born in a dream.<|endoftext|>
+Samples generated: 100%|██████████| 16/16 [15:37<00:00, 58.82s/it]Samples generated: 100%|██████████| 16/16 [15:37<00:00, 58.59s/it]
+Tokens generated: 100%|██████████| 10/10 [02:31<00:00, 15.15s/it]
+["<|startoftext|> i pay attention it's", '<|startoftext|> i just feel extremely sad', '<|startoftext|> i find myself in a', '<|startoftext|> i was feeling as if']
+["<|startoftext|> i pay attention it's a", '<|startoftext|> i just feel extremely sad.', '<|startoftext|> i find myself in a situation', '<|startoftext|> i was feeling as if I']
+["<|startoftext|> i pay attention it's a little", '<|startoftext|> i just feel extremely sad.\n', '<|startoftext|> i find myself in a situation where', '<|startoftext|> i was feeling as if I had']
+["<|startoftext|> i pay attention it's a little bit", '<|startoftext|> i just feel extremely sad.\n[', '<|startoftext|> i find myself in a situation where I', '<|startoftext|> i was feeling as if I had been']
+["<|startoftext|> i pay attention it's a little bit of", '<|startoftext|> i just feel extremely sad.\n[02', '<|startoftext|> i find myself in a situation where I have', '<|startoftext|> i was feeling as if I had been born']
+["<|startoftext|> i pay attention it's a little bit of an", '<|startoftext|> i just feel extremely sad.\n[02:', '<|startoftext|> i find myself in a situation where I have to', '<|startoftext|> i was feeling as if I had been born in']
+["<|startoftext|> i pay attention it's a little bit of an odd", '<|startoftext|> i just feel extremely sad.\n[02:01', '<|startoftext|> i find myself in a situation where I have to make', '<|startoftext|> i was feeling as if I had been born in a']
+["<|startoftext|> i pay attention it's a little bit of an oddity", '<|startoftext|> i just feel extremely sad.\n[02:01]', '<|startoftext|> i find myself in a situation where I have to make decisions', '<|startoftext|> i was feeling as if I had been born in a dream']
+["<|startoftext|> i pay attention it's a little bit of an oddity.", '<|startoftext|> i just feel extremely sad.\n[02:01] <', '<|startoftext|> i find myself in a situation where I have to make decisions about', '<|startoftext|> i was feeling as if I had been born in a dream.']
+["<|startoftext|> i pay attention it's a little bit of an oddity. I", '<|startoftext|> i just feel extremely sad.\n[02:01] <j', '<|startoftext|> i find myself in a situation where I have to make decisions about my', '<|startoftext|> i was feeling as if I had been born in a dream.\n']
