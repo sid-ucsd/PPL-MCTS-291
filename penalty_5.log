@@ -1,0 +1,77 @@
+/home/zeus/miniconda3/envs/cloudspace/lib/python3.10/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Loaded discriminator : validation_final_bert_tuned_oracle2024_11_15-06_54_51.pth
+loading GPT model
+GPT model loaded
+loading dataset
+dataset loaded
+Samples generated:   0%|          | 0/16 [00:00<?, ?it/s]
+Tokens generated:   0%|          | 0/10 [00:00<?, ?it/s][A/teamspace/studios/this_studio/PPL-MCTS/mcts_rollout_emotion.py:91: UserWarning: The torch.cuda.*DtypeTensor constructors are no longer recommended. It's best to use methods such as torch.tensor(data, dtype=*, device='cuda') to create tensors. (Triggered internally at ../torch/csrc/tensor/python_tensor.cpp:83.)
+  tokens_tensor = torch.cuda.LongTensor(tokenizer_res['input_ids'])
+
+Tokens generated:  10%|█         | 1/10 [00:16<02:24, 16.09s/it][A
+Tokens generated:  20%|██        | 2/10 [00:17<01:01,  7.71s/it][A
+Tokens generated:  30%|███       | 3/10 [00:23<00:47,  6.84s/it][A
+Tokens generated:  40%|████      | 4/10 [01:19<02:37, 26.20s/it][A
+Tokens generated:  50%|█████     | 5/10 [01:30<01:43, 20.76s/it][A
+Tokens generated:  60%|██████    | 6/10 [01:32<00:57, 14.34s/it][A
+Tokens generated:  70%|███████   | 7/10 [01:51<00:47, 15.86s/it][A
+Tokens generated:  80%|████████  | 8/10 [02:23<00:41, 20.83s/it][A
+Tokens generated:  90%|█████████ | 9/10 [02:26<00:15, 15.48s/it][A
+Tokens generated: 100%|██████████| 10/10 [02:28<00:00, 11.33s/it][AWARNING:root:<|startoftext|> im feeling rather rotten.<|endoftext|>
+WARNING:root:<|startoftext|> im updating my blog.<|endoftext|>
+WARNING:root:<|startoftext|> i never make her feel bad about it.<|endoftext|>
+WARNING:root:<|startoftext|> i left with my own thoughts.<|endoftext|>
+Samples generated:  25%|██▌       | 4/16 [02:28<07:26, 37.21s/it]['<|startoftext|> im feeling rather rotten.', '<|startoftext|> im updating my blog.', '<|startoftext|> i never make her feel', '<|startoftext|> i left with my own']
+['<|startoftext|> im feeling rather rotten.\n', '<|startoftext|> im updating my blog.\n', '<|startoftext|> i never make her feel bad', '<|startoftext|> i left with my own thoughts']
+['<|startoftext|> im feeling rather rotten.\n[', '<|startoftext|> im updating my blog.\nI', '<|startoftext|> i never make her feel bad about', '<|startoftext|> i left with my own thoughts.']
+['<|startoftext|> im feeling rather rotten.\n[02', "<|startoftext|> im updating my blog.\nI'm", '<|startoftext|> i never make her feel bad about it', '<|startoftext|> i left with my own thoughts.\n']
+['<|startoftext|> im feeling rather rotten.\n[02:', "<|startoftext|> im updating my blog.\nI'm not", '<|startoftext|> i never make her feel bad about it.', '<|startoftext|> i left with my own thoughts.\nI']
+['<|startoftext|> im feeling rather rotten.\n[02:01', "<|startoftext|> im updating my blog.\nI'm not sure", '<|startoftext|> i never make her feel bad about it.\n', "<|startoftext|> i left with my own thoughts.\nI'm"]
+['<|startoftext|> im feeling rather rotten.\n[02:01]', "<|startoftext|> im updating my blog.\nI'm not sure if", '<|startoftext|> i never make her feel bad about it.\n[', "<|startoftext|> i left with my own thoughts.\nI'm not"]
+['<|startoftext|> im feeling rather rotten.\n[02:01] <', "<|startoftext|> im updating my blog.\nI'm not sure if I", '<|startoftext|> i never make her feel bad about it.\n[02', "<|startoftext|> i left with my own thoughts.\nI'm not sure"]
+['<|startoftext|> im feeling rather rotten.\n[02:01] <j', "<|startoftext|> im updating my blog.\nI'm not sure if I should", '<|startoftext|> i never make her feel bad about it.\n[02:', "<|startoftext|> i left with my own thoughts.\nI'm not sure if"]
+['<|startoftext|> im feeling rather rotten.\n[02:01] <jason', "<|startoftext|> im updating my blog.\nI'm not sure if I should say", '<|startoftext|> i never make her feel bad about it.\n[02:01', "<|startoftext|> i left with my own thoughts.\nI'm not sure if I"]
+
+
+Tokens generated:   0%|          | 0/10 [00:00<?, ?it/s][A[ATokens generated: 100%|██████████| 10/10 [02:28<00:00, 14.88s/it]
+
+
+Tokens generated:  10%|█         | 1/10 [00:06<00:58,  6.45s/it][A[A
+
+Tokens generated:  20%|██        | 2/10 [00:08<00:32,  4.09s/it][A[A
+
+Tokens generated:  30%|███       | 3/10 [00:11<00:23,  3.39s/it][A[A
+
+Tokens generated:  40%|████      | 4/10 [00:20<00:34,  5.74s/it][A[A
+
+Tokens generated:  50%|█████     | 5/10 [00:35<00:45,  9.02s/it][A[A
+
+Tokens generated:  60%|██████    | 6/10 [00:42<00:32,  8.24s/it][A[A
+
+Tokens generated:  70%|███████   | 7/10 [02:06<01:38, 32.96s/it][A[A
+
+Tokens generated:  80%|████████  | 8/10 [02:30<01:00, 30.13s/it][A[A['<|startoftext|> i was feeling a little', '<|startoftext|> i cant walk into a', '<|startoftext|> i felt anger when I', "<|startoftext|> i explain why i'm"]
+['<|startoftext|> i was feeling a little bit', '<|startoftext|> i cant walk into a room', '<|startoftext|> i felt anger when I saw', "<|startoftext|> i explain why i'm not"]
+['<|startoftext|> i was feeling a little bit of', '<|startoftext|> i cant walk into a room without', '<|startoftext|> i felt anger when I saw the', "<|startoftext|> i explain why i'm not a"]
+['<|startoftext|> i was feeling a little bit of an', '<|startoftext|> i cant walk into a room without my', '<|startoftext|> i felt anger when I saw the picture', "<|startoftext|> i explain why i'm not a feminist"]
+['<|startoftext|> i was feeling a little bit of an over', '<|startoftext|> i cant walk into a room without my shoes', '<|startoftext|> i felt anger when I saw the picture of', "<|startoftext|> i explain why i'm not a feminist."]
+['<|startoftext|> i was feeling a little bit of an overre', '<|startoftext|> i cant walk into a room without my shoes on', '<|startoftext|> i felt anger when I saw the picture of her', "<|startoftext|> i explain why i'm not a feminist.\n"]
+['<|startoftext|> i was feeling a little bit of an overreaction', '<|startoftext|> i cant walk into a room without my shoes on.', '<|startoftext|> i felt anger when I saw the picture of her.', "<|startoftext|> i explain why i'm not a feminist.\n["]
+['<|startoftext|> i was feeling a little bit of an overreaction to', '<|startoftext|> i cant walk into a room without my shoes on.\n', '<|startoftext|> i felt anger when I saw the picture of her.\n', "<|startoftext|> i explain why i'm not a feminist.\n[20"]
+Traceback (most recent call last):
+  File "/teamspace/studios/this_studio/PPL-MCTS/mcts_rollout_emotion.py", line 590, in <module>
+    main()
+  File "/teamspace/studios/this_studio/PPL-MCTS/mcts_rollout_emotion.py", line 573, in main
+    res_search = MCTS.search(original_input)
+  File "/teamspace/studios/this_studio/PPL-MCTS/mcts_rollout_emotion.py", line 363, in search
+    self.expand(node_indices, actions, next_node_index)
+  File "/teamspace/studios/this_studio/PPL-MCTS/mcts_rollout_emotion.py", line 463, in expand
+    (prior, values, next_states) = self._rec_fun(states, tokens_ids, attention_masks, self._labels, self._temperature, self._repetition_penalty)
+  File "/teamspace/studios/this_studio/PPL-MCTS/mcts_rollout_emotion.py", line 242, in rec_fun
+    while(not is_finished.all() and len(token_ids[0]) < 1024):
+  File "/home/zeus/miniconda3/envs/cloudspace/lib/python3.10/site-packages/torch/_tensor.py", line 996, in __len__
+    def __len__(self):
+KeyboardInterrupt
+Samples generated:  25%|██▌       | 4/16 [05:29<16:27, 82.33s/it]
+Tokens generated:  80%|████████  | 8/10 [03:00<00:45, 22.56s/it]

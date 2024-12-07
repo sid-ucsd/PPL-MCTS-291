@@ -1,0 +1,37 @@
+/home/zeus/miniconda3/envs/cloudspace/lib/python3.10/site-packages/transformers/utils/hub.py:128: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Loaded discriminator : validation_final_bert_tuned_oracle2024_11_15-06_54_51.pth
+loading GPT model
+GPT model loaded
+loading dataset
+dataset loaded
+Samples generated:   0%|          | 0/4 [00:00<?, ?it/s]
+Tokens generated:   0%|          | 0/10 [00:00<?, ?it/s][A/teamspace/studios/this_studio/PPL-MCTS/mcts_rollout_emotion.py:91: UserWarning: The torch.cuda.*DtypeTensor constructors are no longer recommended. It's best to use methods such as torch.tensor(data, dtype=*, device='cuda') to create tensors. (Triggered internally at ../torch/csrc/tensor/python_tensor.cpp:83.)
+  tokens_tensor = torch.cuda.LongTensor(tokenizer_res['input_ids'])
+
+Tokens generated:  10%|█         | 1/10 [01:25<12:50, 85.64s/it][A
+Tokens generated:  20%|██        | 2/10 [02:49<11:15, 84.50s/it][A
+Tokens generated:  30%|███       | 3/10 [04:14<09:53, 84.84s/it][A
+Tokens generated:  40%|████      | 4/10 [05:37<08:25, 84.27s/it][A
+Tokens generated:  50%|█████     | 5/10 [07:00<06:58, 83.64s/it][A
+Tokens generated:  60%|██████    | 6/10 [08:25<05:35, 83.96s/it][A
+Tokens generated:  70%|███████   | 7/10 [09:49<04:12, 84.13s/it][A
+Tokens generated:  80%|████████  | 8/10 [11:13<02:48, 84.11s/it][A
+Tokens generated:  90%|█████████ | 9/10 [12:37<01:23, 83.99s/it][A
+Tokens generated: 100%|██████████| 10/10 [13:59<00:00, 83.55s/it][AWARNING:root:<|startoftext|> im feeling rather rotten|> im feeling rather rotten|> im feeling<|endoftext|>
+WARNING:root:<|startoftext|> im updating my blog im updating my blog im updating my blog im updating<|endoftext|>
+WARNING:root:<|startoftext|> i never make her make her make her make her make her make her<|endoftext|>
+WARNING:root:<|startoftext|> i left with my left left|> i left with my left left<|endoftext|>
+Samples generated: 100%|██████████| 4/4 [13:59<00:00, 209.98s/it]Samples generated: 100%|██████████| 4/4 [13:59<00:00, 209.98s/it]
+Tokens generated: 100%|██████████| 10/10 [13:59<00:00, 83.99s/it]
+['<|startoftext|> im feeling rather rotten|', '<|startoftext|> im updating my blog im', '<|startoftext|> i never make her make', '<|startoftext|> i left with my left']
+['<|startoftext|> im feeling rather rotten|>', '<|startoftext|> im updating my blog im updating', '<|startoftext|> i never make her make her', '<|startoftext|> i left with my left left']
+['<|startoftext|> im feeling rather rotten|> im', '<|startoftext|> im updating my blog im updating my', '<|startoftext|> i never make her make her make', '<|startoftext|> i left with my left left|']
+['<|startoftext|> im feeling rather rotten|> im feeling', '<|startoftext|> im updating my blog im updating my blog', '<|startoftext|> i never make her make her make her', '<|startoftext|> i left with my left left|>']
+['<|startoftext|> im feeling rather rotten|> im feeling rather', '<|startoftext|> im updating my blog im updating my blog im', '<|startoftext|> i never make her make her make her make', '<|startoftext|> i left with my left left|> i']
+['<|startoftext|> im feeling rather rotten|> im feeling rather rotten', '<|startoftext|> im updating my blog im updating my blog im updating', '<|startoftext|> i never make her make her make her make her', '<|startoftext|> i left with my left left|> i left']
+['<|startoftext|> im feeling rather rotten|> im feeling rather rotten|', '<|startoftext|> im updating my blog im updating my blog im updating my', '<|startoftext|> i never make her make her make her make her make', '<|startoftext|> i left with my left left|> i left with']
+['<|startoftext|> im feeling rather rotten|> im feeling rather rotten|>', '<|startoftext|> im updating my blog im updating my blog im updating my blog', '<|startoftext|> i never make her make her make her make her make her', '<|startoftext|> i left with my left left|> i left with my']
+['<|startoftext|> im feeling rather rotten|> im feeling rather rotten|> im', '<|startoftext|> im updating my blog im updating my blog im updating my blog im', '<|startoftext|> i never make her make her make her make her make her make', '<|startoftext|> i left with my left left|> i left with my left']
+['<|startoftext|> im feeling rather rotten|> im feeling rather rotten|> im feeling', '<|startoftext|> im updating my blog im updating my blog im updating my blog im updating', '<|startoftext|> i never make her make her make her make her make her make her', '<|startoftext|> i left with my left left|> i left with my left left']
+Accuracy: 0.2500
